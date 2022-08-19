@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const { application } = require('express');
 require('dotenv').config(); //you use dotenv to keep your environment variables out of source code
 
 AWS.config.update({
@@ -10,6 +11,7 @@ AWS.config.update({
 console.log("server refreshed");
 const dynamo_client = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = "test_table_1";
+
 
 const getUsernames = async () => {
     const params = {

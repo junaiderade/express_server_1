@@ -7,15 +7,52 @@ app.get('/',(req, res) => {
     res.send('Hello World');
 });
 
+app.post('/usernames', async (req, res) => {
+    const user = req.body;
+    try {
+        const newUser = await dynamo_file.add_or_update_user(user);
+        res.json(newUser);
+    
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({err: error})
+    }
+})
+
+app.delete('/usernames/:username', async (req, res) => {
+    const {username} = req.params;
+    try {
+        res.json(await dynamo_file.delete_user(username));
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({err:error});
+    }
+})
+
+app.put('usernames/:name', async (req,res) => {
+    const user = req.body;
+    const {name} = req.params;
+    user.name = name;
+    try {
+        const newUser = await dynamo_file.add_or_update_user(user);
+        res.json(newCharacter);
+    
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({err: error})
+    }
+})
+
+
 app.get('/usernames', async (req,res) => {
     try{
         const users = await dynamo_file.getUsernames();
         res.json(users);
     }catch (error){
-        console.error(err);
-        res.status(500).json({err: 'Something went wrong!'})
+        console.error(error);
+        res.status(500).json({err: error})
     }
-})
+});
 
 app.get('/usernames/:username', async (req,res) => {
     try{
@@ -23,8 +60,8 @@ app.get('/usernames/:username', async (req,res) => {
 
 
     }catch (error){
-        console.error(err);
-        res.status(500).json({err: 'Something went wrong!'})
+        console.error(error);
+        res.status(500).json({err: error})
     }
 });
 
@@ -33,7 +70,7 @@ app.get('/usernames', async (req,res) => {
         const new_user = await dynamo_file.add_or_update_user(user);
         res.json(new_user);
     }catch (error){
-        console.error(err);
+        console.error(error);
         res.status(500).json({err: 'Something went wrong!'})
     }
 })
